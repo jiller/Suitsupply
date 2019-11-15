@@ -18,10 +18,9 @@
     public interface ICommandHandler<in TIn, out TOut> : IHandler<TIn, TOut>
         where TIn: ICommand<TOut>
     {
-        
     }
 
-    public interface ICommand<out TOut>
+    public interface ICommand<in TIn>
     {
     }
 }

@@ -4,4 +4,10 @@
         <TargetFramework>netcoreapp2.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\infrastructure\Suitsupply.Tailoring.DataAccess\Suitsupply.Tailoring.DataAccess.csproj" />
+      <ProjectReference Include="..\Suitsupply.Tailoring.Core\Suitsupply.Tailoring.Core.csproj" />
+      <ProjectReference Include="..\Suitsupply.Tailoring.Data\Suitsupply.Tailoring.Data.csproj" />
+    </ItemGroup>
+
 </Project>
