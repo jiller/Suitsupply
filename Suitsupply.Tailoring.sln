@@ -1,8 +1,72 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.902
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suitsupply.Tailoring.Services", "src\core\Suitsupply.Tailoring.Services\Suitsupply.Tailoring.Services.csproj", "{895E161D-DA7B-436C-96B4-FAE467E1F9AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1975862D-BEF1-4507-ACB8-741076BE49DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CA9B841D-2A72-4F2B-9404-C68410EC28EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suitsupply.Tailoring.Services.Tests", "tests\core\Suitsupply.Tailoring.Services.Tests\Suitsupply.Tailoring.Services.Tests.csproj", "{9CD128CF-D137-46EF-8FD3-B602C70D30AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{52880CFA-7BC6-4795-ACCF-1BF916B1382E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{AC8FA27B-86CF-476E-B87B-AFD9D071355C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suitsupply.Tailoring.Data", "src\core\Suitsupply.Tailoring.Data\Suitsupply.Tailoring.Data.csproj", "{44B46E34-53F9-45CE-8250-7CB058B3D1F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation", "presentation", "{B4170564-EF21-4662-AF95-9EB6D3851F2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Suitsupply.Tailoring.Web.Api", "src\presentation\Suitsupply.Tailoring.Web.Api\Suitsupply.Tailoring.Web.Api.csproj", "{F65721A0-C397-4A2A-AF00-B307539B39E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation", "presentation", "{BBBB4B37-A67E-42E3-A717-0C2CB1009B2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Suitsupply.Tailoring.Web.Api.Tests", "tests\presentation\Suitsupply.Tailoring.Web.Api.Tests\Suitsupply.Tailoring.Web.Api.Tests.csproj", "{0A943D7D-F404-4B24-9D09-34CBF03FCD04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{895E161D-DA7B-436C-96B4-FAE467E1F9AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895E161D-DA7B-436C-96B4-FAE467E1F9AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895E161D-DA7B-436C-96B4-FAE467E1F9AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895E161D-DA7B-436C-96B4-FAE467E1F9AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD128CF-D137-46EF-8FD3-B602C70D30AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD128CF-D137-46EF-8FD3-B602C70D30AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD128CF-D137-46EF-8FD3-B602C70D30AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD128CF-D137-46EF-8FD3-B602C70D30AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B46E34-53F9-45CE-8250-7CB058B3D1F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B46E34-53F9-45CE-8250-7CB058B3D1F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B46E34-53F9-45CE-8250-7CB058B3D1F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B46E34-53F9-45CE-8250-7CB058B3D1F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F65721A0-C397-4A2A-AF00-B307539B39E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F65721A0-C397-4A2A-AF00-B307539B39E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F65721A0-C397-4A2A-AF00-B307539B39E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F65721A0-C397-4A2A-AF00-B307539B39E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{895E161D-DA7B-436C-96B4-FAE467E1F9AC} = {52880CFA-7BC6-4795-ACCF-1BF916B1382E}
+		{9CD128CF-D137-46EF-8FD3-B602C70D30AC} = {AC8FA27B-86CF-476E-B87B-AFD9D071355C}
+		{52880CFA-7BC6-4795-ACCF-1BF916B1382E} = {1975862D-BEF1-4507-ACB8-741076BE49DF}
+		{AC8FA27B-86CF-476E-B87B-AFD9D071355C} = {CA9B841D-2A72-4F2B-9404-C68410EC28EA}
+		{44B46E34-53F9-45CE-8250-7CB058B3D1F4} = {52880CFA-7BC6-4795-ACCF-1BF916B1382E}
+		{B4170564-EF21-4662-AF95-9EB6D3851F2D} = {1975862D-BEF1-4507-ACB8-741076BE49DF}
+		{F65721A0-C397-4A2A-AF00-B307539B39E8} = {B4170564-EF21-4662-AF95-9EB6D3851F2D}
+		{BBBB4B37-A67E-42E3-A717-0C2CB1009B2C} = {CA9B841D-2A72-4F2B-9404-C68410EC28EA}
+		{0A943D7D-F404-4B24-9D09-34CBF03FCD04} = {BBBB4B37-A67E-42E3-A717-0C2CB1009B2C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {21F72DAC-262D-4288-8573-AAB8BBC63C60}
 	EndGlobalSection
 EndGlobal
