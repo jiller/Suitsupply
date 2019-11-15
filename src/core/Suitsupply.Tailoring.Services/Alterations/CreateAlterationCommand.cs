@@ -1,5 +1,4 @@
 ﻿using Suitsupply.Tailoring.Core;
-using Suitsupply.Tailoring.Data;
 
 namespace Suitsupply.Tailoring.Services.Alterations
 {
@@ -11,9 +10,8 @@ namespace Suitsupply.Tailoring.Services.Alterations
     public class NewAlteration
     {
         public int Id { get; set; }
-        
         public byte ShortenSleeves { get; set; }
-        
         public byte ShortenTrousers { get; set; }
+        public int CustomerId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -48,7 +49,19 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
 
             NewAlteration result = null;
             Assert.DoesNotThrow(() => { result = handler.Handle(command); });
-            command.Alteration.Should().BeEquivalentTo(result, options => options.Excluding(x => x.Id));
+            
+            command.Alteration
+                .Should()
+                .BeEquivalentTo(result, options => options.Excluding(x => x.Id));
+
+            using (var db = new TailoringDbContext(_options))
+            {
+                var alterations = db.Alterations.ToArray();
+
+                new[] {command.Alteration}
+                    .Should()
+                    .BeEquivalentTo(alterations, options => options.Excluding(x => x.Id));
+            }
         }
     }
 }

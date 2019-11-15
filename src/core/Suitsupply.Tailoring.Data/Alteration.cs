@@ -10,9 +10,12 @@
             ShortenTrousers = shortenTrousers;
         }
         
+        public int Id { get; set; }
+        
         public byte ShortenSleeves { get; set; }
         
         public byte ShortenTrousers { get; set; }
-        public int Id { get; set; }
+        
+        public int CustomerId { get; set; }
     }
 }

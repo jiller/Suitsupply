@@ -27,7 +27,8 @@ namespace Suitsupply.Tailoring.Services.Alterations
                 {
                     Id = alteration.Id,
                     ShortenSleeves = alteration.ShortenSleeves,
-                    ShortenTrousers = alteration.ShortenTrousers
+                    ShortenTrousers = alteration.ShortenTrousers,
+                    CustomerId = alteration.CustomerId
                 };
             }
         }
