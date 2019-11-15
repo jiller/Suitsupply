@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation", "presentatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Suitsupply.Tailoring.Web.Api.Tests", "tests\presentation\Suitsupply.Tailoring.Web.Api.Tests\Suitsupply.Tailoring.Web.Api.Tests.csproj", "{0A943D7D-F404-4B24-9D09-34CBF03FCD04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Suitsupply.Tailoring.Core", "src\core\Suitsupply.Tailoring.Core\Suitsupply.Tailoring.Core.csproj", "{8622D875-31F1-4838-B3D7-AE2FC8483A10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A943D7D-F404-4B24-9D09-34CBF03FCD04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8622D875-31F1-4838-B3D7-AE2FC8483A10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8622D875-31F1-4838-B3D7-AE2FC8483A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8622D875-31F1-4838-B3D7-AE2FC8483A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8622D875-31F1-4838-B3D7-AE2FC8483A10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +71,7 @@ Global
 		{F65721A0-C397-4A2A-AF00-B307539B39E8} = {B4170564-EF21-4662-AF95-9EB6D3851F2D}
 		{BBBB4B37-A67E-42E3-A717-0C2CB1009B2C} = {CA9B841D-2A72-4F2B-9404-C68410EC28EA}
 		{0A943D7D-F404-4B24-9D09-34CBF03FCD04} = {BBBB4B37-A67E-42E3-A717-0C2CB1009B2C}
+		{8622D875-31F1-4838-B3D7-AE2FC8483A10} = {52880CFA-7BC6-4795-ACCF-1BF916B1382E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21F72DAC-262D-4288-8573-AAB8BBC63C60}
