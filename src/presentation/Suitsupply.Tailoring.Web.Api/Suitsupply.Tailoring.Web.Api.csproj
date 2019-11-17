@@ -28,4 +28,10 @@
     <Folder Include="Messaging" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.*.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </Content>
+  </ItemGroup>
+
 </Project>

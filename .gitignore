@@ -8,3 +8,4 @@ bin/
 
 # Temporary folder
 temp/
+appsettings.Local.json
