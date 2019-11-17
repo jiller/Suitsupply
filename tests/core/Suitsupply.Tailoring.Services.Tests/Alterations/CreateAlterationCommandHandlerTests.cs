@@ -41,7 +41,8 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
                 Alteration = new NewAlteration
                 {
                     ShortenSleeves = 3,
-                    ShortenTrousers = 2
+                    ShortenTrousers = 2,
+                    CustomerId = 123
                 }
             };
             
