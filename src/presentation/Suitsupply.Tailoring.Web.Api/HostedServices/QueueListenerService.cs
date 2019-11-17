@@ -3,64 +3,70 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.InteropExtensions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Suitsupply.Tailoring.Web.Api.Configuration;
-using Suitsupply.Tailoring.Web.Api.Extensions;
+using Suitsupply.Tailoring.Web.Api.Messaging;
 
 namespace Suitsupply.Tailoring.Web.Api.HostedServices
 {
     [UsedImplicitly]
-    public class QueueListenerService : IHostedService
+    public class QueueListenerService : IQueueListenerService
     {
         private readonly ILogger<QueueListenerService> _logger;
         private readonly ISubscriptionClient _subscriptionClient;
         private readonly TopicSubscriptionConfig _config;
-        private readonly IServiceProvider _services;
+        private readonly IQueuedMessageHandler _messageHandler;
 
         public QueueListenerService(
             ILogger<QueueListenerService> logger,
             ISubscriptionClient subscriptionClient,
             TopicSubscriptionConfig config,
-            IServiceProvider services)
+            IQueuedMessageHandler messageHandler)
         {
             _logger = logger;
             _subscriptionClient = subscriptionClient;
             _config = config;
-            _services = services;
+            _messageHandler = messageHandler;
         }
         
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            var options = new MessageHandlerOptions(ExceptionReceivedHandler)
+            var options = new MessageHandlerOptions(_messageHandler.ExceptionReceivedHandler)
             {
                 AutoComplete = false,
                 MaxConcurrentCalls = _config.MaxConcurrentCall
             };
-            _subscriptionClient.RegisterMessageHandler(ProcessMessageAsync, options);
-        }
-
-        private Task ProcessMessageAsync(Message message, CancellationToken cancellationToken)
-        {
-            using (var scope = _services.CreateScope())
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
-        {
-            _logger.LogError(arg.Exception, 
-                $"Message handler encountered an exception. Context for troubleshooting:{Environment.NewLine}{arg.ExceptionReceivedContext.ToJson()}");
-
+            _subscriptionClient.RegisterMessageHandler(ProcessOrderPaidMessageAsync, options);
+            
+            _logger.LogInformation($"Background {nameof(QueueListenerService)} is started");
             return Task.CompletedTask;
+        }
+        
+        public async Task ProcessOrderPaidMessageAsync(Message message, CancellationToken cancellationToken)
+        {
+            using (_logger.BeginScope($"[CorrelationId: {message.CorrelationId}; LockToken: {message.SystemProperties.LockToken}]"))
+            {
+                _logger.LogInformation("Message was received");
+                try
+                {
+                    await _messageHandler.ProcessOrderPaidMessageAsync(message, cancellationToken);
+
+                    _logger.LogInformation("Message was successfully processed");
+                    await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
+                }
+                catch (Exception err)
+                {
+                    _logger.LogError(err, "Error occured while processing message");
+                    await _subscriptionClient.AbandonAsync(message.SystemProperties.LockToken);
+                }
+            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Stopping background {nameof(QueueListenerService)}...");
             await _subscriptionClient?.CloseAsync();
+            _logger.LogInformation($"Background {nameof(QueueListenerService)} is stopped");
         }
     }
 }

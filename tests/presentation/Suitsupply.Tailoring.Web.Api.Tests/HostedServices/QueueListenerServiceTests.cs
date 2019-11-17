@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Suitsupply.Tailoring.Web.Api.Configuration;
 using Suitsupply.Tailoring.Web.Api.HostedServices;
+using Suitsupply.Tailoring.Web.Api.Messaging;
 
 namespace Suitsupply.Tailoring.Web.Api.Tests.HostedServices
 {
@@ -14,29 +15,43 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.HostedServices
     public class QueueListenerServiceTests
     {
         private Mock<ILogger<QueueListenerService>> _loggerMock;
+        private Mock<ISubscriptionClient> _subscriptionClientMock;
+        private Mock<IQueuedMessageHandler> _messageHandlerMock;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             _loggerMock = new Mock<ILogger<QueueListenerService>>();
         }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _subscriptionClientMock = new Mock<ISubscriptionClient>();
+            _messageHandlerMock = new Mock<IQueuedMessageHandler>();
+        }
         
         [Test]
         public async Task SubscriptionClientShouldDisposeOnStopping()
         {
-            var subscriptionClientMock = new Mock<ISubscriptionClient>();
-            var serviceProviderMock = new Mock<IServiceProvider>();
-            
-            var service = new QueueListenerService(
-                _loggerMock.Object,
-                subscriptionClientMock.Object,
-                new TopicSubscriptionConfig(), 
-                serviceProviderMock.Object);
+            var service = CreateQueueListenerService();
 
             await service.StopAsync(CancellationToken.None);
             
-            subscriptionClientMock
-                .Verify(s => s.CloseAsync(), Times.Once);
+            _subscriptionClientMock.Verify(s => s.CloseAsync(), Times.Once);
+        }
+
+        private QueueListenerService CreateQueueListenerService(
+            ILogger<QueueListenerService> logger = null,
+            ISubscriptionClient subscriptionClient = null,
+            TopicSubscriptionConfig config = null,
+            IQueuedMessageHandler messageHandler = null)
+        {
+            return new QueueListenerService(
+                logger ?? _loggerMock.Object,
+                subscriptionClient ?? _subscriptionClientMock.Object,
+                config ?? new TopicSubscriptionConfig(), 
+                messageHandler ?? _messageHandlerMock.Object);
         }
     }
 }
