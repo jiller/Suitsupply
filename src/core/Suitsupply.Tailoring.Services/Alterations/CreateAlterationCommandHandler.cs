@@ -1,4 +1,5 @@
-﻿using Suitsupply.Tailoring.Core;
+﻿using System.Threading.Tasks;
+using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.DataAccess;
 
@@ -14,14 +15,18 @@ namespace Suitsupply.Tailoring.Services.Alterations
             _factory = factory;
         }
         
-        public NewAlteration Handle(CreateAlterationCommand input)
+        public async Task<NewAlteration> HandleAsync(CreateAlterationCommand input)
         {
             using (var db = _factory.Create())
             {
-                var alteration = new Alteration(input.Alteration.ShortenSleeves, input.Alteration.ShortenTrousers);
+                var alteration = new Alteration(input.Alteration.CustomerId)
+                {
+                    ShortenSleeves = input.Alteration.ShortenSleeves,
+                    ShortenTrousers = input.Alteration.ShortenTrousers
+                };
                 db.Alterations.Add(alteration);
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 return new NewAlteration
                 {

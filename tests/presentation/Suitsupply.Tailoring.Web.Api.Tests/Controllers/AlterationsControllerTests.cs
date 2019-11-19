@@ -43,7 +43,7 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
             
             handler
-                .Verify(x => x.Handle(
+                .Verify(x => x.HandleAsync(
                         It.Is<CreateAlterationCommand>(c => c.Alteration.ShortenSleeves == request.ShortenSleeves &&
                                                             c.Alteration.ShortenTrousers == request.ShortenTrousers)),
                     Times.Once);

@@ -1,9 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Microsoft.Azure.ServiceBus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
 using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.DataAccess;
 using Suitsupply.Tailoring.Web.Api.Configuration;
 
 namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
@@ -39,6 +41,15 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
                     config.TopicName,
                     config.SubscriptionName);
             }, Lifestyle.Singleton);
+            
+            container.Register(() =>
+            {
+                var connectionString = Configuration.GetConnectionString("tailoring-db");
+                var optionsBuilder = new DbContextOptionsBuilder<TailoringDbContext>();
+                optionsBuilder.UseSqlServer(connectionString);
+                return optionsBuilder.Options;
+            }, Lifestyle.Singleton);
+            container.Register(typeof(IDbContextFactory<TailoringDbContext>), typeof(TailoringDbContextFactory));
 
             return container;
         }

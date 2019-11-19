@@ -4,10 +4,9 @@
     {
         protected Alteration() {}
 
-        public Alteration(byte shortenSleeves, byte shortenTrousers)
+        public Alteration(int customerId)
         {
-            ShortenSleeves = shortenSleeves;
-            ShortenTrousers = shortenTrousers;
+            CustomerId = customerId;
         }
         
         public int Id { get; set; }

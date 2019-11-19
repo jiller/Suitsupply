@@ -5,7 +5,11 @@ using JetBrains.Annotations;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Data;
+using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Extensions;
+using Suitsupply.Tailoring.Web.Api.Messaging.Converters;
 
 namespace Suitsupply.Tailoring.Web.Api.Messaging
 {
@@ -23,14 +27,13 @@ namespace Suitsupply.Tailoring.Web.Api.Messaging
             _serviceProvider = serviceProvider;
         }
 
-        public Task ProcessOrderPaidMessageAsync(Message message, CancellationToken cancellationToken)
+        public async Task ProcessOrderPaidMessageAsync(Message message, CancellationToken cancellationToken)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                
+                var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<PayAlterationCommand, Alteration>>();
+                await commandHandler.HandleAsync(message.ConvertToCommand<PayAlterationCommand>());
             }
-            
-            return Task.CompletedTask;
         }
 
         public Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)

@@ -55,7 +55,7 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
                     }
                 };
 
-                var result = _createAlterationHandler.Handle(command);
+                var result = _createAlterationHandler.HandleAsync(command);
                 return Ok(result);
             }
             catch (Exception err)

@@ -49,7 +49,7 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
             var handler = new CreateAlterationCommandHandler(_dbFactory.Object);
 
             NewAlteration result = null;
-            Assert.DoesNotThrow(() => { result = handler.Handle(command); });
+            Assert.DoesNotThrowAsync(async () => { result = await handler.HandleAsync(command); });
             
             command.Alteration
                 .Should()

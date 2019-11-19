@@ -1,11 +1,13 @@
-﻿namespace Suitsupply.Tailoring.Core
+﻿using System.Threading.Tasks;
+
+namespace Suitsupply.Tailoring.Core
 {
-    public interface IHandler<in TIn, out TOut>
+    public interface IHandler<in TIn, TOut>
     {
-        TOut Handle(TIn input);
+        Task<TOut> HandleAsync(TIn input);
     }
 
-    public interface IQueryHandler<in TIn, out TOut> : IHandler<TIn, TOut>
+    public interface IQueryHandler<in TIn, TOut> : IHandler<TIn, TOut>
         where TIn : IQuery<TOut>
     {
         
@@ -15,12 +17,16 @@
     {
     }
 
-    public interface ICommandHandler<in TIn, out TOut> : IHandler<TIn, TOut>
+    public interface ICommandHandler<in TIn, TOut> : IHandler<TIn, TOut>
         where TIn: ICommand<TOut>
     {
     }
 
-    public interface ICommand<in TIn>
+    public interface ICommand<in TIn> : ICommand
+    {
+    }
+
+    public interface ICommand
     {
     }
 }

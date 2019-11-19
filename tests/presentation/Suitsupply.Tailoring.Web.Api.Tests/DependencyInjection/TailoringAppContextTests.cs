@@ -21,7 +21,8 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.DependencyInjection
                 {
                     {"TopicSubscriptionConfig:ServiceBusConnectionString", "ServiceBusConnectionString"},
                     {"TopicSubscriptionConfig:TopicName", "OrderPaid"},
-                    {"TopicSubscriptionConfig:SubscriptionName", "Suitsupply.Tailoring"}
+                    {"TopicSubscriptionConfig:SubscriptionName", "Suitsupply.Tailoring"},
+                    {"ConnectionStrings:tailoring-db", "Data Source=localhost"}
                 })
                 .Build();
         }
