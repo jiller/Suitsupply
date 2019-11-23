@@ -1,38 +1,15 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Moq;
+using FluentAssertions.Equivalency;
 using NUnit.Framework;
-using Suitsupply.Tailoring.Core;
-using Suitsupply.Tailoring.DataAccess;
+using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
 
 namespace Suitsupply.Tailoring.Services.Tests.Alterations
 {
     [TestFixture]
-    public class CreateAlterationCommandHandlerTests
+    public class CreateAlterationCommandHandlerTests : BaseCommandHandlerTests
     {
-        private DbContextOptions<TailoringDbContext> _options;
-        private TailoringDbContext _dbContext;
-        private Mock<IDbContextFactory<TailoringDbContext>> _dbFactory;
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _options = new DbContextOptionsBuilder<TailoringDbContext>()
-                .UseInMemoryDatabase(databaseName: "tailoring_db")
-                .Options;
-
-            _dbFactory = new Mock<IDbContextFactory<TailoringDbContext>>();
-            _dbFactory.Setup(x => x.Create()).Returns(() => _dbContext);
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            _dbContext = new TailoringDbContext(_options);
-        }
-
         [Test]
         public void CreateAlterationCommandShouldBeHandled()
         {
@@ -46,7 +23,7 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
                 }
             };
             
-            var handler = new CreateAlterationCommandHandler(_dbFactory.Object);
+            var handler = new CreateAlterationCommandHandler(GetDbContextFactory());
 
             NewAlteration result = null;
             Assert.DoesNotThrowAsync(async () => { result = await handler.HandleAsync(command); });
@@ -55,14 +32,23 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
                 .Should()
                 .BeEquivalentTo(result, options => options.Excluding(x => x.Id));
 
-            using (var db = new TailoringDbContext(_options))
+            using (var db = GetDbContextFactory().Create())
             {
                 var alterations = db.Alterations.ToArray();
 
-                new[] {command.Alteration}
+                alterations
                     .Should()
-                    .BeEquivalentTo(alterations, options => options.Excluding(x => x.Id));
+                    .BeEquivalentTo(new[] {command.Alteration}, GetNewAlterationComparerOptions);
             }
+        }
+
+        private static EquivalencyAssertionOptions<NewAlteration> GetNewAlterationComparerOptions(EquivalencyAssertionOptions<NewAlteration> options)
+        {
+            return options
+                .Excluding(x => x.Id)
+                .Using<AlterationState>(ctx => ctx.Subject.Should().Be(AlterationState.Created))
+                .WhenTypeIs<AlterationState>()
+                .WithTracing();
         }
     }
 }
