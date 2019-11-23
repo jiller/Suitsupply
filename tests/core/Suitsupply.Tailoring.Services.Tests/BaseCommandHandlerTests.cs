@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using Suitsupply.Tailoring.Core;
@@ -9,7 +10,8 @@ namespace Suitsupply.Tailoring.Services.Tests
     public class BaseCommandHandlerTests
     {
         private readonly DbContextOptions<TailoringDbContext> _options;
-        private readonly Mock<IDbContextFactory<TailoringDbContext>> _dbFactory;
+        private readonly Mock<IDbContextFactory<TailoringDbContext>> _dbFactoryMock;
+        private readonly Mock<IDateTimeProvider> _dateTimeProviderMock;
 
         protected BaseCommandHandlerTests()
         {
@@ -17,13 +19,20 @@ namespace Suitsupply.Tailoring.Services.Tests
                 .UseInMemoryDatabase(databaseName: "tailoring_db")
                 .Options;
             
-            _dbFactory = new Mock<IDbContextFactory<TailoringDbContext>>();
-            _dbFactory.Setup(x => x.Create()).Returns(() => new TailoringDbContext(_options));
+            _dbFactoryMock = new Mock<IDbContextFactory<TailoringDbContext>>();
+            _dbFactoryMock.Setup(x => x.Create()).Returns(() => new TailoringDbContext(_options));
+            
+            _dateTimeProviderMock = new Mock<IDateTimeProvider>();
         }
 
         protected IDbContextFactory<TailoringDbContext> GetDbContextFactory()
         {
-            return _dbFactory.Object;
+            return _dbFactoryMock.Object;
+        }
+
+        protected IDateTimeProvider GetDateTimeProvider()
+        {
+            return _dateTimeProviderMock.Object;
         }
         
         [SetUp]
@@ -34,6 +43,14 @@ namespace Suitsupply.Tailoring.Services.Tests
             {
                 db.Database.EnsureDeleted();
             }
+
+            _dateTimeProviderMock.Setup(p => p.GetUtcNow()).Returns(DateTime.UtcNow);
+        }
+
+        protected DateTime SetUpCurrentDateTime(DateTime dateTime)
+        {
+            _dateTimeProviderMock.Setup(p => p.GetUtcNow()).Returns(dateTime);
+            return dateTime;
         }
     }
 }

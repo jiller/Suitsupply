@@ -17,28 +17,39 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
             {
                 AlterationId = BootstrapDbContextWithCreatedAlteration()
             };
+            var utcNow = SetUpCurrentDateTime(DateTime.UtcNow);
             
-            var commandHandler = new PayAlterationCommandHandler(GetDbContextFactory());
+            var commandHandler = CreatePayAlterationCommandHandler();
             var result = await commandHandler.HandleAsync(command);
             
             Assert.That(result.State, Is.EqualTo(AlterationState.Paid));
+            
             Assert.That(result.PayDate, Is.Not.Null);
+            Assert.That(result.PayDate, Is.EqualTo(utcNow));
         }
-        
+
         [Test]
         public async Task ShouldDoNothingOnPaidAlterationAsync()
         {
-            DateTime payDate = DateTime.UtcNow.AddDays(-1);
+            var payDate = DateTime.UtcNow.AddDays(-1);
             var command = new PayAlterationCommand
             {
                 AlterationId = BootstrapDbContextWithPaidAlteration(payDate)
             };
-            
-            var commandHandler = new PayAlterationCommandHandler(GetDbContextFactory());
+
+            var commandHandler = CreatePayAlterationCommandHandler();
             var result = await commandHandler.HandleAsync(command);
             
             Assert.That(result.State, Is.EqualTo(AlterationState.Paid));
             Assert.That(result.PayDate, Is.EqualTo(payDate));
+        }
+        
+        private PayAlterationCommandHandler CreatePayAlterationCommandHandler()
+        {
+            var commandHandler = new PayAlterationCommandHandler(
+                GetDbContextFactory(),
+                GetDateTimeProvider());
+            return commandHandler;
         }
 
         private int BootstrapDbContextWithPaidAlteration(DateTime payDate)

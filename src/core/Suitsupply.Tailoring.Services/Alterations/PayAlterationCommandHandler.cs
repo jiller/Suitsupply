@@ -10,10 +10,13 @@ namespace Suitsupply.Tailoring.Services.Alterations
     public class PayAlterationCommandHandler : ICommandHandler<PayAlterationCommand, Alteration>
     {
         private readonly IDbContextFactory<TailoringDbContext> _factory;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public PayAlterationCommandHandler(IDbContextFactory<TailoringDbContext> factory)
+        public PayAlterationCommandHandler(IDbContextFactory<TailoringDbContext> factory,
+            IDateTimeProvider dateTimeProvider)
         {
             _factory = factory;
+            _dateTimeProvider = dateTimeProvider;
         }
         
         public async Task<Alteration> HandleAsync(PayAlterationCommand command)
@@ -39,7 +42,7 @@ namespace Suitsupply.Tailoring.Services.Alterations
                 }
 
                 alteration.State = AlterationState.Paid;
-                alteration.PayDate = DateTime.UtcNow;
+                alteration.PayDate = _dateTimeProvider.GetUtcNow();
 
                 await db.SaveChangesAsync();
                 return alteration;

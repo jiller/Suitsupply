@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using SimpleInjector;
 using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.DataAccess;
+using Suitsupply.Tailoring.Services;
 using Suitsupply.Tailoring.Web.Api.Configuration;
 
 namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
@@ -31,6 +32,7 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
             container.RegisterInstance(topicSubscriptionConfig);
             
             container.Register(typeof(IHandler<,>), AppDomain.CurrentDomain.GetAssemblies());
+            container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
             
             container.Register<ISubscriptionClient>(() =>
             {
