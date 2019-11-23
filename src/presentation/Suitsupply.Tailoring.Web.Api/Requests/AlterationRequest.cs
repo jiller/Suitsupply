@@ -8,15 +8,20 @@ namespace Suitsupply.Tailoring.Web.Api.Requests
     public class AlterationRequest
     {
         /// <summary>
+        /// Customer identifier
+        /// </summary>
+        [Required]
+        public int CustomerId { get; set; }
+        /// <summary>
         /// Alteration for sleeves
         /// </summary>
-        [Required, Range(-5, 5)]
-        public byte ShortenSleeves { get; set; }
+        [Required]
+        public Shortening ShortenSleeves { get; set; }
         
         /// <summary>
         /// Alteration for trousers
         /// </summary>
-        [Required, Range(-5, 5)]
-        public byte ShortenTrousers { get; set; }
+        [Required]
+        public Shortening ShortenTrousers { get; set; }
     }
 }

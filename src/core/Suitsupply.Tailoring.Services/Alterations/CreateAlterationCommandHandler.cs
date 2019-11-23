@@ -21,8 +21,10 @@ namespace Suitsupply.Tailoring.Services.Alterations
             {
                 var alteration = new Alteration(command.Alteration.CustomerId)
                 {
-                    ShortenSleeves = command.Alteration.ShortenSleeves,
-                    ShortenTrousers = command.Alteration.ShortenTrousers
+                    ShortenSleevesLeft = command.Alteration.ShortenSleevesLeft,
+                    ShortenSleevesRight = command.Alteration.ShortenSleevesRight,
+                    ShortenTrousersLeft = command.Alteration.ShortenTrousersLeft,
+                    ShortenTrousersRight = command.Alteration.ShortenTrousersRight
                 };
                 db.Alterations.Add(alteration);
 

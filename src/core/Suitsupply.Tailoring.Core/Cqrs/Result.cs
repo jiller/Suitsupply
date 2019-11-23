@@ -22,5 +22,20 @@ namespace Suitsupply.Tailoring.Core.Cqrs
         {
             return new Result();
         }
+
+        public static IResult<TData> SuccessResult<TData>(TData @object)
+        {
+            return new Result<TData>(@object);
+        }
+    }
+
+    public class Result<TData> : Result, IResult<TData>
+    {
+        public Result(TData @object)
+        {
+            Data = @object;
+        }
+        
+        public TData Data { get; }
     }
 }

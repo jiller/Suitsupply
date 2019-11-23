@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Requests;
@@ -30,13 +30,29 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Please provide correct id value");
+            }
+            
+            try
+            {
+                var query = new GetAlterationByIdQuery(id);
+                var result = await _mediator.ExecuteAsync(query);
+
+                return Ok(result.Data);
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, $"Failed to retrieve alteration '{id}'");
+                return StatusCode((int) HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] AlterationRequest request)
+        public async Task<IActionResult> Post([FromBody] AlterationRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -49,12 +65,15 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
                 {
                     Alteration = new NewAlteration
                     {
-                        ShortenSleeves = request.ShortenSleeves,
-                        ShortenTrousers = request.ShortenTrousers
+                        ShortenSleevesLeft = request.ShortenSleeves.Left,
+                        ShortenSleevesRight = request.ShortenSleeves.Right,
+                        ShortenTrousersLeft = request.ShortenTrousers.Left,
+                        ShortenTrousersRight = request.ShortenTrousers.Right,
+                        CustomerId = request.CustomerId
                     }
                 };
 
-                var result = _mediator.ExecuteAsync(command);
+                var result = await _mediator.ExecuteAsync(command);
                 return Ok(result);
             }
             catch (Exception err)
@@ -66,11 +85,6 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] AlterationRequest request)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }

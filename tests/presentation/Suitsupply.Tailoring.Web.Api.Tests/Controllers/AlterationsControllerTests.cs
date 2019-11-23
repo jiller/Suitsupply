@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -28,25 +29,25 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Controllers
         }
 
         [Test]
-        public void PostShouldCallCreateAlterationCommand()
+        public async Task PostShouldCallCreateAlterationCommand()
         {
             var mediatorMock = new Mock<IMediator>();
             var controller = new AlterationsController(_logger.Object, mediatorMock.Object);
 
             var request = new AlterationRequest
             {
-                ShortenSleeves = 3,
-                ShortenTrousers = 2
+                ShortenSleeves = new Shortening(3, 0),
+                ShortenTrousers = new Shortening(0, 2)
             };
 
-            var result = controller.Post(request);
+            var result = await controller.Post(request);
             
             Assert.That(result, Is.TypeOf<OkObjectResult>());
 
             mediatorMock
                 .Verify(x => x.ExecuteAsync(
-                        It.Is<CreateAlterationCommand>(c => c.Alteration.ShortenSleeves == request.ShortenSleeves &&
-                                                            c.Alteration.ShortenTrousers == request.ShortenTrousers)),
+                        It.Is<CreateAlterationCommand>(c => c.Alteration.ShortenSleevesLeft == request.ShortenSleeves.Left &&
+                                                            c.Alteration.ShortenTrousersRight == request.ShortenTrousers.Right)),
                     Times.Once);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Suitsupply.Tailoring.Data;
+using Suitsupply.Tailoring.DataAccess.Configurations;
 
 namespace Suitsupply.Tailoring.DataAccess
 {
@@ -15,5 +16,12 @@ namespace Suitsupply.Tailoring.DataAccess
         }
         
         public DbSet<Alteration> Alterations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new AlterationConfiguration());
+        }
     }
 }

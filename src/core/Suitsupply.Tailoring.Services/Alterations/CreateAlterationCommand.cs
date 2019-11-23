@@ -11,8 +11,10 @@ namespace Suitsupply.Tailoring.Services.Alterations
     public class NewAlteration
     {
         public int Id { get; set; }
-        public byte ShortenSleeves { get; set; }
-        public byte ShortenTrousers { get; set; }
+        public byte ShortenSleevesLeft { get; set; }
+        public byte ShortenSleevesRight { get; set; }
+        public byte ShortenTrousersLeft { get; set; }
+        public byte ShortenTrousersRight { get; set; }
         public int CustomerId { get; set; }
     }
 }
