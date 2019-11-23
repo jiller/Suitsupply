@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using NUnit.Framework;
@@ -20,12 +21,18 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
             var utcNow = SetUpCurrentDateTime(DateTime.UtcNow);
             
             var commandHandler = CreatePayAlterationCommandHandler();
-            var result = await commandHandler.HandleAsync(command);
+            var result = await commandHandler.ExecuteAsync(command);
             
-            Assert.That(result.State, Is.EqualTo(AlterationState.Paid));
-            
-            Assert.That(result.PayDate, Is.Not.Null);
-            Assert.That(result.PayDate, Is.EqualTo(utcNow));
+            Assert.That(result.IsSuccess, Is.True);
+
+            using (var db = GetDbContextFactory().Create())
+            {
+                var alteration = db.Alterations.FirstOrDefault(a => a.Id == command.AlterationId);
+                
+                Assert.That(alteration.State, Is.EqualTo(AlterationState.Paid));
+                Assert.That(alteration.PayDate, Is.Not.Null);
+                Assert.That(alteration.PayDate, Is.EqualTo(utcNow));
+            }
         }
 
         [Test]
@@ -38,10 +45,16 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
             };
 
             var commandHandler = CreatePayAlterationCommandHandler();
-            var result = await commandHandler.HandleAsync(command);
+            var result = await commandHandler.ExecuteAsync(command);
             
-            Assert.That(result.State, Is.EqualTo(AlterationState.Paid));
-            Assert.That(result.PayDate, Is.EqualTo(payDate));
+            using (var db = GetDbContextFactory().Create())
+            {
+                var alteration = db.Alterations.FirstOrDefault(a => a.Id == command.AlterationId);
+                
+                Assert.That(alteration.State, Is.EqualTo(AlterationState.Paid));
+                Assert.That(alteration.PayDate, Is.Not.Null);
+                Assert.That(alteration.PayDate, Is.EqualTo(payDate));
+            }
         }
         
         private PayAlterationCommandHandler CreatePayAlterationCommandHandler()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
@@ -9,7 +8,6 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Suitsupply.Tailoring.Core;
-using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Messaging;
 
@@ -33,14 +31,14 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Messaging
             {
                 AlterationId = 123
             };
-            var commandHandlerMock = new Mock<ICommandHandler<PayAlterationCommand, Alteration>>();
+            var commandHandlerMock = new Mock<ICommandHandler<PayAlterationCommand>>();
 
             await CreateAndExecutePayAlterationCommandHandler(commandHandlerMock.Object, command);
             
-            commandHandlerMock.Verify(h => h.HandleAsync(It.Is<PayAlterationCommand>(c => c.AlterationId == command.AlterationId)), Times.Once);
+            commandHandlerMock.Verify(h => h.ExecuteAsync(It.Is<PayAlterationCommand>(c => c.AlterationId == command.AlterationId)), Times.Once);
         }
 
-        private async Task CreateAndExecutePayAlterationCommandHandler(ICommandHandler<PayAlterationCommand, Alteration>  commandHandler, PayAlterationCommand command)
+        private async Task CreateAndExecutePayAlterationCommandHandler(ICommandHandler<PayAlterationCommand>  commandHandler, PayAlterationCommand command)
         {
             var serviceProvider = BuildServiceProvider(commandHandler);
             
@@ -50,7 +48,7 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Messaging
                 new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command))), CancellationToken.None);
         }
 
-        private IServiceScopeFactory BuildServiceProvider(ICommandHandler<PayAlterationCommand, Alteration> commandHandler)
+        private IServiceScopeFactory BuildServiceProvider(ICommandHandler<PayAlterationCommand> commandHandler)
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped(x => commandHandler);

@@ -5,8 +5,7 @@ using Suitsupply.Tailoring.DataAccess;
 
 namespace Suitsupply.Tailoring.Services.Alterations
 {
-    public class CreateAlterationCommandHandler : 
-        ICommandHandler<CreateAlterationCommand, NewAlteration>
+    public class CreateAlterationCommandHandler : ICommandHandler<CreateAlterationCommand>
     {
         private readonly IDbContextFactory<TailoringDbContext> _factory;
 
@@ -15,26 +14,20 @@ namespace Suitsupply.Tailoring.Services.Alterations
             _factory = factory;
         }
         
-        public async Task<NewAlteration> HandleAsync(CreateAlterationCommand input)
+        public async Task<IResult> ExecuteAsync(CreateAlterationCommand command)
         {
             using (var db = _factory.Create())
             {
-                var alteration = new Alteration(input.Alteration.CustomerId)
+                var alteration = new Alteration(command.Alteration.CustomerId)
                 {
-                    ShortenSleeves = input.Alteration.ShortenSleeves,
-                    ShortenTrousers = input.Alteration.ShortenTrousers
+                    ShortenSleeves = command.Alteration.ShortenSleeves,
+                    ShortenTrousers = command.Alteration.ShortenTrousers
                 };
                 db.Alterations.Add(alteration);
 
                 await db.SaveChangesAsync();
 
-                return new NewAlteration
-                {
-                    Id = alteration.Id,
-                    ShortenSleeves = alteration.ShortenSleeves,
-                    ShortenTrousers = alteration.ShortenTrousers,
-                    CustomerId = alteration.CustomerId
-                };
+                return Result.SuccessResult();
             }
         }
     }

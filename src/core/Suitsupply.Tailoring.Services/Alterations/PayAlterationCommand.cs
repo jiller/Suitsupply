@@ -1,10 +1,8 @@
-﻿using System;
-using Suitsupply.Tailoring.Core;
-using Suitsupply.Tailoring.Data;
+﻿using Suitsupply.Tailoring.Core;
 
 namespace Suitsupply.Tailoring.Services.Alterations
 {
-    public class PayAlterationCommand : ICommand<Alteration>
+    public class PayAlterationCommand : ICommand
     {
         public int AlterationId { get; set; }
     }

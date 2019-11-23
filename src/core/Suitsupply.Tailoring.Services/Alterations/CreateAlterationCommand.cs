@@ -2,7 +2,7 @@
 
 namespace Suitsupply.Tailoring.Services.Alterations
 {
-    public class CreateAlterationCommand : ICommand<NewAlteration>
+    public class CreateAlterationCommand : ICommand
     {
         public NewAlteration Alteration { get; set; }
     }

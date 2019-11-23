@@ -10,7 +10,6 @@ using SimpleInjector;
 using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.DataAccess;
 using Suitsupply.Tailoring.Services;
-using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Configuration;
 using Suitsupply.Tailoring.Web.Api.Messaging;
 
@@ -59,7 +58,7 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
                 .GetAssemblies()
                 .First(a => a.GetName().Name == "Suitsupply.Tailoring.Services");
 
-            Container.Register(typeof(ICommandHandler<,>), servicesAssembly);
+            Container.Register(typeof(ICommandHandler<>), servicesAssembly);
             Container.Register(typeof(IQueryHandler<,>), servicesAssembly);
             
             Container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();

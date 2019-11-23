@@ -14,10 +14,10 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
     public class AlterationsController : ControllerBase
     {
         private readonly ILogger<AlterationsController> _logger;
-        private readonly ICommandHandler<CreateAlterationCommand, NewAlteration> _createAlterationHandler;
+        private readonly ICommandHandler<CreateAlterationCommand> _createAlterationHandler;
 
         public AlterationsController(ILogger<AlterationsController> logger,
-            ICommandHandler<CreateAlterationCommand, NewAlteration> createAlterationHandler)
+            ICommandHandler<CreateAlterationCommand> createAlterationHandler)
         {
             _logger = logger;
             _createAlterationHandler = createAlterationHandler;
@@ -54,7 +54,7 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
                     }
                 };
 
-                var result = _createAlterationHandler.HandleAsync(command);
+                var result = _createAlterationHandler.ExecuteAsync(command);
                 return Ok(result);
             }
             catch (Exception err)

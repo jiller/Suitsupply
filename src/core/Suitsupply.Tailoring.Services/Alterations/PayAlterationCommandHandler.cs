@@ -7,7 +7,7 @@ using Suitsupply.Tailoring.DataAccess;
 
 namespace Suitsupply.Tailoring.Services.Alterations
 {
-    public class PayAlterationCommandHandler : ICommandHandler<PayAlterationCommand, Alteration>
+    public class PayAlterationCommandHandler : ICommandHandler<PayAlterationCommand>
     {
         private readonly IDbContextFactory<TailoringDbContext> _factory;
         private readonly IDateTimeProvider _dateTimeProvider;
@@ -18,8 +18,8 @@ namespace Suitsupply.Tailoring.Services.Alterations
             _factory = factory;
             _dateTimeProvider = dateTimeProvider;
         }
-        
-        public async Task<Alteration> HandleAsync(PayAlterationCommand command)
+
+        public async Task<IResult> ExecuteAsync(PayAlterationCommand command)
         {
             using (var db = _factory.Create())
             {
@@ -32,7 +32,7 @@ namespace Suitsupply.Tailoring.Services.Alterations
                 // Do nothing, when Alteration already paid
                 if (alteration.State == AlterationState.Paid)
                 {
-                    return alteration;
+                    return Result.SuccessResult();
                 }
                 
                 // Throw exception, when Alteration completed
@@ -45,7 +45,7 @@ namespace Suitsupply.Tailoring.Services.Alterations
                 alteration.PayDate = _dateTimeProvider.GetUtcNow();
 
                 await db.SaveChangesAsync();
-                return alteration;
+                return Result.SuccessResult();
             }
         }
     }

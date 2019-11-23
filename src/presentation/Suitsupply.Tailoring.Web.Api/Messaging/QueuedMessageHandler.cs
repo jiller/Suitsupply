@@ -6,7 +6,6 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Suitsupply.Tailoring.Core;
-using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Extensions;
 using Suitsupply.Tailoring.Web.Api.Messaging.Converters;
@@ -31,16 +30,14 @@ namespace Suitsupply.Tailoring.Web.Api.Messaging
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<PayAlterationCommand, Alteration>>();
-                await commandHandler.HandleAsync(message.ConvertToCommand<PayAlterationCommand>());
+                var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<PayAlterationCommand>>();
+                await commandHandler.ExecuteAsync(message.ConvertToCommand<PayAlterationCommand>());
             }
         }
 
         public Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
         {
-            _logger.LogError(arg.Exception, 
-                $"Message handler encountered an exception. Context for troubleshooting:{Environment.NewLine}{arg.ExceptionReceivedContext.ToJson()}");
-
+            _logger.LogError(arg.Exception, $"Message handler encountered an exception. Context for troubleshooting:{Environment.NewLine}{arg.ExceptionReceivedContext.ToJson()}");
             return Task.CompletedTask;
         }
     }

@@ -2,6 +2,7 @@
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
 
@@ -25,12 +26,9 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
             
             var handler = new CreateAlterationCommandHandler(GetDbContextFactory());
 
-            NewAlteration result = null;
-            Assert.DoesNotThrowAsync(async () => { result = await handler.HandleAsync(command); });
-            
-            command.Alteration
-                .Should()
-                .BeEquivalentTo(result, options => options.Excluding(x => x.Id));
+            IResult result = null;
+            Assert.DoesNotThrowAsync(async () => { result = await handler.ExecuteAsync(command); });
+            Assert.That(result.IsSuccess, Is.True);
 
             using (var db = GetDbContextFactory().Create())
             {

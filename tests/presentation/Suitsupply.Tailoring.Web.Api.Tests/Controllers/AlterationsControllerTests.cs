@@ -29,7 +29,7 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Controllers
         [Test]
         public void PostShouldCallCreateAlterationCommand()
         {
-            var handler = new Mock<ICommandHandler<CreateAlterationCommand, NewAlteration>>();
+            var handler = new Mock<ICommandHandler<CreateAlterationCommand>>();
             var controller = new AlterationsController(_logger.Object, handler.Object);
 
             var request = new AlterationRequest
@@ -43,7 +43,7 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
             
             handler
-                .Verify(x => x.HandleAsync(
+                .Verify(x => x.ExecuteAsync(
                         It.Is<CreateAlterationCommand>(c => c.Alteration.ShortenSleeves == request.ShortenSleeves &&
                                                             c.Alteration.ShortenTrousers == request.ShortenTrousers)),
                     Times.Once);
