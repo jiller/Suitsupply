@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Controllers;
 using Suitsupply.Tailoring.Web.Api.Requests;
@@ -29,8 +30,8 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Controllers
         [Test]
         public void PostShouldCallCreateAlterationCommand()
         {
-            var handler = new Mock<ICommandHandler<CreateAlterationCommand>>();
-            var controller = new AlterationsController(_logger.Object, handler.Object);
+            var mediatorMock = new Mock<IMediator>();
+            var controller = new AlterationsController(_logger.Object, mediatorMock.Object);
 
             var request = new AlterationRequest
             {
@@ -41,8 +42,8 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Controllers
             var result = controller.Post(request);
             
             Assert.That(result, Is.TypeOf<OkObjectResult>());
-            
-            handler
+
+            mediatorMock
                 .Verify(x => x.ExecuteAsync(
                         It.Is<CreateAlterationCommand>(c => c.Alteration.ShortenSleeves == request.ShortenSleeves &&
                                                             c.Alteration.ShortenTrousers == request.ShortenTrousers)),

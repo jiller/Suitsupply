@@ -4,6 +4,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Requests;
 
@@ -14,13 +15,12 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
     public class AlterationsController : ControllerBase
     {
         private readonly ILogger<AlterationsController> _logger;
-        private readonly ICommandHandler<CreateAlterationCommand> _createAlterationHandler;
+        private readonly IMediator _mediator;
 
-        public AlterationsController(ILogger<AlterationsController> logger,
-            ICommandHandler<CreateAlterationCommand> createAlterationHandler)
+        public AlterationsController(ILogger<AlterationsController> logger, IMediator mediator)
         {
             _logger = logger;
-            _createAlterationHandler = createAlterationHandler;
+            _mediator = mediator;
         }
         
         [HttpGet]
@@ -54,7 +54,7 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
                     }
                 };
 
-                var result = _createAlterationHandler.ExecuteAsync(command);
+                var result = _mediator.ExecuteAsync(command);
                 return Ok(result);
             }
             catch (Exception err)

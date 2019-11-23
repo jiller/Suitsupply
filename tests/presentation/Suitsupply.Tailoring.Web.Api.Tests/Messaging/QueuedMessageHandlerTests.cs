@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Messaging;
 
@@ -31,16 +31,16 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Messaging
             {
                 AlterationId = 123
             };
-            var commandHandlerMock = new Mock<ICommandHandler<PayAlterationCommand>>();
+            var mediatorMock = new Mock<IMediator>();
 
-            await CreateAndExecutePayAlterationCommandHandler(commandHandlerMock.Object, command);
+            await CreateAndExecutePayAlterationCommandHandler(mediatorMock.Object, command);
             
-            commandHandlerMock.Verify(h => h.ExecuteAsync(It.Is<PayAlterationCommand>(c => c.AlterationId == command.AlterationId)), Times.Once);
+            mediatorMock.Verify(h => h.ExecuteAsync(It.Is<PayAlterationCommand>(c => c.AlterationId == command.AlterationId)), Times.Once);
         }
 
-        private async Task CreateAndExecutePayAlterationCommandHandler(ICommandHandler<PayAlterationCommand>  commandHandler, PayAlterationCommand command)
+        private async Task CreateAndExecutePayAlterationCommandHandler(IMediator mediator, PayAlterationCommand command)
         {
-            var serviceProvider = BuildServiceProvider(commandHandler);
+            var serviceProvider = BuildServiceProvider(mediator);
             
             var messageHandler = new QueuedMessageHandler(_loggerMock.Object, serviceProvider);
 
@@ -48,10 +48,10 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Messaging
                 new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command))), CancellationToken.None);
         }
 
-        private IServiceScopeFactory BuildServiceProvider(ICommandHandler<PayAlterationCommand> commandHandler)
+        private IServiceScopeFactory BuildServiceProvider(IMediator mediator)
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped(x => commandHandler);
+            serviceCollection.AddScoped(x => mediator);
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();

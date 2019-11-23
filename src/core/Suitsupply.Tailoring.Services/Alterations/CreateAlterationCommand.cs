@@ -1,4 +1,5 @@
 ﻿using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 
 namespace Suitsupply.Tailoring.Services.Alterations
 {

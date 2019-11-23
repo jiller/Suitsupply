@@ -3,6 +3,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
 using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
 

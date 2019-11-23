@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Azure.ServiceBus;
 using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Web.Api.Extensions;
 
 namespace Suitsupply.Tailoring.Web.Api.Messaging.Converters

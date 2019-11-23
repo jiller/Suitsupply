@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.DataAccess;
 

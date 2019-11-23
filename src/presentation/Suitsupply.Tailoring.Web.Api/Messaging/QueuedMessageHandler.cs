@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Suitsupply.Tailoring.Core;
+using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Extensions;
 using Suitsupply.Tailoring.Web.Api.Messaging.Converters;
@@ -30,8 +30,8 @@ namespace Suitsupply.Tailoring.Web.Api.Messaging
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<PayAlterationCommand>>();
-                await commandHandler.ExecuteAsync(message.ConvertToCommand<PayAlterationCommand>());
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                await mediator.ExecuteAsync(message.ConvertToCommand<PayAlterationCommand>());
             }
         }
 
