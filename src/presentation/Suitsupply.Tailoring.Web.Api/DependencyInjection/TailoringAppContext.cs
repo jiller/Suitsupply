@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.DataAccess;
 using Suitsupply.Tailoring.Services;
+using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Configuration;
+using Suitsupply.Tailoring.Web.Api.Messaging;
 
 namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
 {
@@ -17,26 +22,22 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
         public TailoringAppContext(IConfiguration configuration)
         {
             Configuration = configuration;
-            Container = InitializeAndVerifyContainer();
+            Container = new Container();
         }
 
         public IConfiguration Configuration { get; }
         public Container Container { get; }
 
-        private Container InitializeAndVerifyContainer()
+        public void InitializeContainer()
         {
-            var container = new Container();
-            container.Options.AllowOverridingRegistrations = true;
+            Container.Options.AllowOverridingRegistrations = true;
             
             var topicSubscriptionConfig = Configuration.GetSection($"{nameof(TopicSubscriptionConfig)}").Get<TopicSubscriptionConfig>();
-            container.RegisterInstance(topicSubscriptionConfig);
-            
-            container.Register(typeof(IHandler<,>), AppDomain.CurrentDomain.GetAssemblies());
-            container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
-            
-            container.Register<ISubscriptionClient>(() =>
+            Container.RegisterInstance(topicSubscriptionConfig);
+
+            Container.Register<ISubscriptionClient>(() =>
             {
-                var config = container.GetInstance<TopicSubscriptionConfig>();
+                var config = Container.GetInstance<TopicSubscriptionConfig>();
                 
                 return new SubscriptionClient(
                     config.ServiceBusConnectionString,
@@ -44,16 +45,30 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
                     config.SubscriptionName);
             }, Lifestyle.Singleton);
             
-            container.Register(() =>
+            Container.Register(() =>
             {
                 var connectionString = Configuration.GetConnectionString("tailoring-db");
                 var optionsBuilder = new DbContextOptionsBuilder<TailoringDbContext>();
-                optionsBuilder.UseSqlServer(connectionString);
+                //optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseInMemoryDatabase();
                 return optionsBuilder.Options;
             }, Lifestyle.Singleton);
-            container.Register(typeof(IDbContextFactory<TailoringDbContext>), typeof(TailoringDbContextFactory));
+            Container.Register(typeof(IDbContextFactory<TailoringDbContext>), typeof(TailoringDbContextFactory));
 
-            return container;
+            var servicesAssembly = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .First(a => a.GetName().Name == "Suitsupply.Tailoring.Services");
+
+            Container.Register(typeof(ICommandHandler<,>), servicesAssembly);
+            Container.Register(typeof(IQueryHandler<,>), servicesAssembly);
+            
+            Container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
+            Container.RegisterSingleton<IQueuedMessageHandler>(() =>
+            {
+                return new QueuedMessageHandler(
+                    Container.GetInstance<ILogger<QueuedMessageHandler>>(),
+                    Container.GetInstance<IServiceScopeFactory>());
+            });
         }
         
         private void ReleaseUnmanagedResources()

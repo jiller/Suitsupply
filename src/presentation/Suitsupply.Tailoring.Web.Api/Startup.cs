@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 using Suitsupply.Tailoring.Web.Api.DependencyInjection;
 using Suitsupply.Tailoring.Web.Api.HostedServices;
@@ -14,12 +16,9 @@ namespace Suitsupply.Tailoring.Web.Api
     {
         private readonly TailoringAppContext _context;
 
-        public Startup(IHostingEnvironment environment, IApplicationLifetime applicationLifetime, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             _context = new TailoringAppContext(configuration);
-
-            // Register shutdown handler to safe dispose the DI container
-            applicationLifetime.ApplicationStopping.Register(OnShutdown);
         }
 
         private void OnShutdown()
@@ -31,6 +30,8 @@ namespace Suitsupply.Tailoring.Web.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry();
+            services.AddLogging(builder => { builder.AddApplicationInsights(); });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             
             services.AddSimpleInjector(_context.Container, options =>
             {
@@ -40,20 +41,30 @@ namespace Suitsupply.Tailoring.Web.Api
 
                 options.AddHostedService<QueueListenerService>();
             });
-            
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseSimpleInjector(_context.Container, options => { });
+            
+            app.UseSimpleInjector(_context.Container, options =>
+            {
+                options.AutoCrossWireFrameworkComponents = true;
+                options.UseLogging();
+                options.CrossWire<IServiceScopeFactory>();
+            });
+            
+            _context.InitializeContainer();
+            _context.Container.Verify();
+            
             app.UseMvc();
+            
+            // Register shutdown handler to safe dispose the DI container
+            applicationLifetime.ApplicationStopping.Register(OnShutdown);
         }
     }
 }

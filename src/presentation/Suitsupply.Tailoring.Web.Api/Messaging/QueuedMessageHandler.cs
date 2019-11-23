@@ -17,19 +17,19 @@ namespace Suitsupply.Tailoring.Web.Api.Messaging
     public class QueuedMessageHandler : IQueuedMessageHandler
     {
         private readonly ILogger<QueuedMessageHandler> _logger;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public QueuedMessageHandler(
             ILogger<QueuedMessageHandler> logger,
-            IServiceProvider serviceProvider)
+            IServiceScopeFactory serviceScopeFactory)
         {
             _logger = logger;
-            _serviceProvider = serviceProvider;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task ProcessOrderPaidMessageAsync(Message message, CancellationToken cancellationToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<PayAlterationCommand, Alteration>>();
                 await commandHandler.HandleAsync(message.ConvertToCommand<PayAlterationCommand>());

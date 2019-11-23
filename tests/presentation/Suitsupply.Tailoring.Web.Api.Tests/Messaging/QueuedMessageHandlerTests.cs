@@ -50,11 +50,18 @@ namespace Suitsupply.Tailoring.Web.Api.Tests.Messaging
                 new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command))), CancellationToken.None);
         }
 
-        private IServiceProvider BuildServiceProvider(ICommandHandler<PayAlterationCommand, Alteration> commandHandler)
+        private IServiceScopeFactory BuildServiceProvider(ICommandHandler<PayAlterationCommand, Alteration> commandHandler)
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped(x => commandHandler);
-            return serviceCollection.BuildServiceProvider();
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
+            serviceScopeFactoryMock
+                .Setup(f => f.CreateScope())
+                .Returns(serviceProvider.CreateScope);
+            
+            return serviceScopeFactoryMock.Object;
         }
     }
 }
