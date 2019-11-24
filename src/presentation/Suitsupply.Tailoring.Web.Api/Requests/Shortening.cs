@@ -13,16 +13,16 @@ namespace Suitsupply.Tailoring.Web.Api.Requests
         {
         }
 
-        public Shortening(byte left, byte right)
+        public Shortening(int left, int right)
         {
             Left = left;
             Right = right;
         }
         
         [Required, Range(-5, 5)]
-        public byte Left { get; set; }
+        public int Left { get; set; }
         
         [Required, Range(-5, 5)]
-        public byte Right { get; set; }
+        public int Right { get; set; }
     }
 }

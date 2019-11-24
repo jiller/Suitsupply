@@ -21,13 +21,13 @@ namespace Suitsupply.Tailoring.Data
         
         public int Id { get; set; }
         
-        public byte ShortenSleevesLeft { get; set; }
+        public int ShortenSleevesLeft { get; set; }
         
-        public byte ShortenTrousersLeft { get; set; }
+        public int ShortenTrousersLeft { get; set; }
         
-        public byte ShortenSleevesRight { get; set; }
+        public int ShortenSleevesRight { get; set; }
         
-        public byte ShortenTrousersRight { get; set; }
+        public int ShortenTrousersRight { get; set; }
         
         public int CustomerId { get; set; }
         

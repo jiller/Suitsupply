@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Suitsupply.Tailoring.Core.Cqrs;
+using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
 using Suitsupply.Tailoring.Web.Api.Requests;
 
@@ -24,9 +24,20 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
         }
         
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<Alteration[]>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var query = new GetAlterationListQuery();
+                var result = await _mediator.ExecuteAsync(query);
+
+                return Ok(result.Data);
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, "Failed to retrieve alteration list");
+                return StatusCode((int) HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpGet("{id}")]
