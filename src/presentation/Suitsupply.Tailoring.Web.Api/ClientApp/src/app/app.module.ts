@@ -7,9 +7,9 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
 import { AlterationsComponent } from './alterations/alterations.component';
 import { NewAlterationsComponent } from "./alterations/new/new-alteration.component";
+import {ViewAlterationsComponent} from "./alterations/view/view-alteration.component";
 
 import { ShorteningPipe} from "./pipes/shortening.pipe";
 
@@ -19,9 +19,9 @@ import { ShorteningPipe} from "./pipes/shortening.pipe";
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
     AlterationsComponent,
     NewAlterationsComponent,
+    ViewAlterationsComponent,
     // Pipes
     ShorteningPipe
   ],
@@ -31,9 +31,10 @@ import { ShorteningPipe} from "./pipes/shortening.pipe";
     FormsModule,
     RouterModule.forRoot([
       {path: '', component: HomeComponent, pathMatch: 'full'},
-      {path: 'counter', component: CounterComponent},
+      {path: 'app', component: HomeComponent},
       {path: 'alterations', component: AlterationsComponent},
-      {path: 'alterations/new', component: NewAlterationsComponent}
+      {path: 'alterations/new', component: NewAlterationsComponent},
+      {path: 'alterations/view/:id', component: ViewAlterationsComponent}
     ]),
     ReactiveFormsModule
   ],

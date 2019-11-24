@@ -1,9 +1,11 @@
 ﻿import {Shortening} from "./shortening";
 
 export interface Alteration {
+  id: number;
   customerId: number;
   shortenSleeves: Shortening;
   shortenTrousers: Shortening;
   creationDate: Date;
-  orderState: string;
+  payDate: Date;
+  state: string;
 }

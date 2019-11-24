@@ -9,10 +9,12 @@ namespace Suitsupply.Tailoring.Services.Alterations
     public class CreateAlterationCommandHandler : ICommandHandler<CreateAlterationCommand>
     {
         private readonly IDbContextFactory<TailoringDbContext> _factory;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public CreateAlterationCommandHandler(IDbContextFactory<TailoringDbContext> factory)
+        public CreateAlterationCommandHandler(IDbContextFactory<TailoringDbContext> factory, IDateTimeProvider dateTimeProvider)
         {
             _factory = factory;
+            _dateTimeProvider = dateTimeProvider;
         }
         
         public async Task<IResult> ExecuteAsync(CreateAlterationCommand command)
@@ -24,7 +26,9 @@ namespace Suitsupply.Tailoring.Services.Alterations
                     ShortenSleevesLeft = command.Alteration.ShortenSleevesLeft,
                     ShortenSleevesRight = command.Alteration.ShortenSleevesRight,
                     ShortenTrousersLeft = command.Alteration.ShortenTrousersLeft,
-                    ShortenTrousersRight = command.Alteration.ShortenTrousersRight
+                    ShortenTrousersRight = command.Alteration.ShortenTrousersRight,
+                    CreationDate = _dateTimeProvider.GetUtcNow(),
+                    State = AlterationState.Created
                 };
                 db.Alterations.Add(alteration);
 

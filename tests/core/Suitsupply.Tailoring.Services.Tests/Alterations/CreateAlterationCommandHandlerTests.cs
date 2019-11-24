@@ -2,7 +2,6 @@
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
-using Suitsupply.Tailoring.Core;
 using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
@@ -25,7 +24,7 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
                 }
             };
             
-            var handler = new CreateAlterationCommandHandler(GetDbContextFactory());
+            var handler = new CreateAlterationCommandHandler(GetDbContextFactory(), GetDateTimeProvider());
 
             IResult result = null;
             Assert.DoesNotThrowAsync(async () => { result = await handler.ExecuteAsync(command); });
@@ -44,7 +43,6 @@ namespace Suitsupply.Tailoring.Services.Tests.Alterations
         private static EquivalencyAssertionOptions<NewAlteration> GetNewAlterationComparerOptions(EquivalencyAssertionOptions<NewAlteration> options)
         {
             return options
-                .Excluding(x => x.Id)
                 .Using<AlterationState>(ctx => ctx.Subject.Should().Be(AlterationState.Created))
                 .WhenTypeIs<AlterationState>()
                 .WithTracing();

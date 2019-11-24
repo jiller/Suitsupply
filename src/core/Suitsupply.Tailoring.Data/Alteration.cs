@@ -33,6 +33,8 @@ namespace Suitsupply.Tailoring.Data
         
         public AlterationState State { get; set; }
         
+        public DateTime CreationDate { get; set; }
+        
         public DateTime? PayDate { get; set; }
     }
 }

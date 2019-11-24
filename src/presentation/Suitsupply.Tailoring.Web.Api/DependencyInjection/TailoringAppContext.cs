@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,9 @@ using Suitsupply.Tailoring.Core.Cqrs;
 using Suitsupply.Tailoring.DataAccess;
 using Suitsupply.Tailoring.Services;
 using Suitsupply.Tailoring.Web.Api.Configuration;
+using Suitsupply.Tailoring.Web.Api.Mappings;
 using Suitsupply.Tailoring.Web.Api.Messaging;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
 {
@@ -35,6 +38,7 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
             RegisterServiceBus();
             RegisterDatabase();
             RegisterCqs();
+            RegisterAutoMapper();
 
             Container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
             Container.RegisterSingleton<IQueuedMessageHandler>(() =>
@@ -42,6 +46,15 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
                 return new QueuedMessageHandler(
                     Container.GetInstance<ILogger<QueuedMessageHandler>>(),
                     Container.GetInstance<IServiceScopeFactory>());
+            });
+        }
+
+        private void RegisterAutoMapper()
+        {
+            Container.RegisterSingleton(() =>
+            {
+                var mp = Container.GetInstance<MapperProvider>();
+                return mp.GetMapper();
             });
         }
 

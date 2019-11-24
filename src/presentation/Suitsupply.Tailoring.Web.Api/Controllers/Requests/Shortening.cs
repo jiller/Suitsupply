@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
-namespace Suitsupply.Tailoring.Web.Api.Requests
+namespace Suitsupply.Tailoring.Web.Api.Controllers.Requests
 {
     /// <summary>
     /// Description of shortening of sleeves or trousers

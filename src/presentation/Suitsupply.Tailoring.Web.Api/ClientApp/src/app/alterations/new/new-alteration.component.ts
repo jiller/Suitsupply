@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, Inject } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
 
@@ -11,8 +11,7 @@ export class NewAlterationsComponent implements OnInit {
   public error: any;
   public alterationForm: FormGroup;
 
-  constructor(private fb: FormBuilder,
-              private http: HttpClient,
+  constructor(private http: HttpClient,
               @Inject('BASE_API_URL') private baseUrl: string,
               private router: Router){
     this.ngOnInit();
@@ -33,8 +32,6 @@ export class NewAlterationsComponent implements OnInit {
   }
 
   onSubmit(){
-    console.warn(this.alterationForm.value);
-
     this.http
       .post(this.baseUrl + '/alterations', this.alterationForm.value)
       .subscribe((result: any) => {

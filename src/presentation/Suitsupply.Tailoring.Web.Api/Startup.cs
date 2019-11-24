@@ -32,7 +32,14 @@ namespace Suitsupply.Tailoring.Web.Api
         {
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(builder => { builder.AddApplicationInsights(); });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                });
             services.AddSpaStaticFiles(options => options.RootPath = "app");
             
             services.AddSimpleInjector(_context.Container, options =>

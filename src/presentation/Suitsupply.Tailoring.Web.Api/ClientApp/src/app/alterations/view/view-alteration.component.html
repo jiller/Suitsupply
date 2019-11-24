@@ -1,0 +1,42 @@
+﻿<h1 id="formLabel">Create a new alteration</h1>
+
+<div class="form-group" aria-labelledby="formLabel">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        Customer ID: {{alteration?.customerId}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      Shorten Sleeves: {{alteration?.shortenSleeves | shortening}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      Shorten Trousers: {{alteration?.shortenTrousers | shortening}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      Creation date: {{alteration?.creationDate | date:'dd.MM.yyyy HH:mm'}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      State: {{alteration?.state}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      Pay Date: {{alteration?.payDate | date:'dd.MM.yyyy HH:mm'}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button [disabled]="alteration?.state != 'Created'" (click)="markAlterationAsPaid()">Pay</button>
+      <button [disabled]="alteration?.state != 'Paid'" (click)="markAlterationAsDone()">Done</button>
+    </div>
+  </div>
+</div>

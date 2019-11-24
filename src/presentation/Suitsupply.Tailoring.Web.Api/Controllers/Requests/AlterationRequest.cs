@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Suitsupply.Tailoring.Web.Api.Requests
+namespace Suitsupply.Tailoring.Web.Api.Controllers.Requests
 {
     /// <summary>
     /// Request for alterations

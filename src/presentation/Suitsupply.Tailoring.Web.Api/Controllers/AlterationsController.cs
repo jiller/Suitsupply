@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Suitsupply.Tailoring.Core.Cqrs;
-using Suitsupply.Tailoring.Data;
 using Suitsupply.Tailoring.Services.Alterations;
-using Suitsupply.Tailoring.Web.Api.Requests;
+using Suitsupply.Tailoring.Web.Api.Controllers.Requests;
+using Suitsupply.Tailoring.Web.Api.Controllers.Responses;
 
 namespace Suitsupply.Tailoring.Web.Api.Controllers
 {
@@ -16,22 +17,25 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
     {
         private readonly ILogger<AlterationsController> _logger;
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public AlterationsController(ILogger<AlterationsController> logger, IMediator mediator)
+        public AlterationsController(ILogger<AlterationsController> logger, IMediator mediator, IMapper mapper)
         {
             _logger = logger;
             _mediator = mediator;
+            _mapper = mapper;
         }
         
         [HttpGet]
-        public async Task<ActionResult<Alteration[]>> Get()
+        public async Task<ActionResult<AlterationListResponse>> Get()
         {
             try
             {
                 var query = new GetAlterationListQuery();
                 var result = await _mediator.ExecuteAsync(query);
 
-                return Ok(result.Data);
+                var response = _mapper.Map<AlterationListResponse>(result);
+                return Ok(response);
             }
             catch (Exception err)
             {
@@ -41,7 +45,7 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<AlterationDto>> Get(int id)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +57,8 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
                 var query = new GetAlterationByIdQuery(id);
                 var result = await _mediator.ExecuteAsync(query);
 
-                return Ok(result.Data);
+                var response = _mapper.Map<AlterationDto>(result.Data);
+                return Ok(response);
             }
             catch (Exception err)
             {
@@ -72,18 +77,7 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
 
             try
             {
-                var command = new CreateAlterationCommand
-                {
-                    Alteration = new NewAlteration
-                    {
-                        ShortenSleevesLeft = request.ShortenSleeves.Left,
-                        ShortenSleevesRight = request.ShortenSleeves.Right,
-                        ShortenTrousersLeft = request.ShortenTrousers.Left,
-                        ShortenTrousersRight = request.ShortenTrousers.Right,
-                        CustomerId = request.CustomerId
-                    }
-                };
-
+                var command = _mapper.Map<CreateAlterationCommand>(request);
                 var result = await _mediator.ExecuteAsync(command);
                 return Ok(result);
             }

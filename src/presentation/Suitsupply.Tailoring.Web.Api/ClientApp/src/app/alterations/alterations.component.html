@@ -25,7 +25,10 @@
       <td>{{ alteration.shortenSleeves | shortening }}</td>
       <td>{{ alteration.shortenTrousers | shortening }}</td>
       <td>{{ alteration.creationDate | date:'dd.MM.yyyy HH:mm' }}</td>
-      <td>{{ alteration.orderState }}</td>
+      <td>{{ alteration.state }}</td>
+      <td>
+        <button [routerLink]="['/alterations/view', alteration.id]">View</button>
+      </td>
     </tr>
   </tbody>
 </table>
