@@ -1,0 +1,26 @@
+<h1 id="tableLabel">Sleeves \ Trousers alterations</h1>
+
+<p>List of all customers alteratons</p>
+
+<p *ngIf="!alterations"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="alterations">
+  <thead>
+    <tr>
+      <th>Customer ID</th>
+      <th>Shorten sleeves</th>
+      <th>Shortem trousers</th>
+      <th>Creation Date</th>
+      <th>Order state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let alteration of alterations">
+      <td>{{ alteration.customerId }}</td>
+      <td>{{ alteration.shortenSleeves | shortening }}</td>
+      <td>{{ alteration.shortenTrousers | shortening }}</td>
+      <td>{{ alteration.creationDate | date:'dd.MM.yyyy HH:mm' }}</td>
+      <td>{{ alteration.orderState }}</td>
+    </tr>
+  </tbody>
+</table>

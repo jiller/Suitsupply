@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,7 @@ namespace Suitsupply.Tailoring.Web.Api
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(builder => { builder.AddApplicationInsights(); });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSpaStaticFiles(options => options.RootPath = "app");
             
             services.AddSimpleInjector(_context.Container, options =>
             {
@@ -61,7 +63,24 @@ namespace Suitsupply.Tailoring.Web.Api
             _context.InitializeContainer();
             _context.Container.Verify();
             
-            app.UseMvc();
+            app
+                .UseHttpsRedirection()
+                .UseStaticFiles()
+                .UseMvc();
+
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
+            
+            app.UseSpa(builder =>
+            {
+                builder.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    builder.UseAngularCliServer(npmScript: "start");
+                }
+            });
             
             // Register shutdown handler to safe dispose the DI container
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
