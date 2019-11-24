@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -88,9 +89,42 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] AlterationRequest request)
+        [HttpPost("{id}/pay")]
+        public async Task<IActionResult> PayAlteration(int id)
         {
+            try
+            {
+                var command = new PayAlterationCommand
+                {
+                    AlterationId = id
+                };
+                var result = await _mediator.ExecuteAsync(command);
+                return Ok(result);
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, "Failed to pay alteration");
+                return StatusCode((int) HttpStatusCode.InternalServerError);
+            }
+        }
+        
+        [HttpPost("{id}/done")]
+        public async Task<IActionResult> DoneAlteration(int id)
+        {
+            try
+            {
+                var command = new DoneAlterationCommand
+                {
+                    AlterationId = id
+                };
+                var result = await _mediator.ExecuteAsync(command);
+                return Ok(result);
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, "Failed to pay alteration");
+                return StatusCode((int) HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

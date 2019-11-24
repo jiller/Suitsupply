@@ -23,6 +23,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   cursor: hand;
+  margin: 5px;
 }
 button:hover {
   background-color: #cfd8dc;
@@ -31,6 +32,10 @@ button:disabled {
   background-color: #eee;
   color: #aaa;
   cursor: auto;
+}
+
+button.no-margin {
+  margin: 0px;
 }
 
 button.green {

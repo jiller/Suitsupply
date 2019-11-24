@@ -3,40 +3,46 @@
 <div class="form-group" aria-labelledby="formLabel">
   <div class="row">
     <div class="col-12">
-      <div class="form-group">
-        Customer ID: {{alteration?.customerId}}
-      </div>
+      <b>Customer ID:</b> {{alteration?.customerId}}
     </div>
   </div>
   <div class="row">
     <div class="col-6">
-      Shorten Sleeves: {{alteration?.shortenSleeves | shortening}}
+      <b>Shorten Sleeves:</b> {{alteration?.shortenSleeves | shortening}}
     </div>
   </div>
   <div class="row">
     <div class="col-6">
-      Shorten Trousers: {{alteration?.shortenTrousers | shortening}}
+      <b>Shorten Trousers:</b> {{alteration?.shortenTrousers | shortening}}
     </div>
   </div>
   <div class="row">
     <div class="col-6">
-      Creation date: {{alteration?.creationDate | date:'dd.MM.yyyy HH:mm'}}
+      <b>Creation date:</b> {{alteration?.creationDate | date:'dd.MM.yyyy HH:mm'}}
     </div>
   </div>
   <div class="row">
     <div class="col-6">
-      State: {{alteration?.state}}
+      <b>State:</b> {{alteration?.state}}
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="alteration?.payDate">
     <div class="col-6">
-      Pay Date: {{alteration?.payDate | date:'dd.MM.yyyy HH:mm'}}
+      <b>Pay Date:</b> {{alteration?.payDate | date:'dd.MM.yyyy HH:mm:ss'}}
+    </div>
+  </div>
+  <div class="row" *ngIf="alteration?.completeDate">
+    <div class="col-6">
+      <b>Complete Date:</b> {{alteration?.completeDate | date:'dd.MM.yyyy HH:mm:ss'}}
     </div>
   </div>
   <div class="row">
     <div class="col-12">
-      <button [disabled]="alteration?.state != 'Created'" (click)="markAlterationAsPaid()">Pay</button>
-      <button [disabled]="alteration?.state != 'Paid'" (click)="markAlterationAsDone()">Done</button>
+      <div class="form-group">
+        <button [disabled]="alteration?.state != 'Created'" (click)="markAlterationAsPaid()">Pay</button>
+        <button [disabled]="alteration?.state != 'Paid'" (click)="markAlterationAsDone()">Done</button>
+        <button [routerLink]="['/alterations']">Close</button>
+      </div>
     </div>
   </div>
 </div>

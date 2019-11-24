@@ -7,5 +7,6 @@ export interface Alteration {
   shortenTrousers: Shortening;
   creationDate: Date;
   payDate: Date;
+  completeDate: Date;
   state: string;
 }

@@ -36,5 +36,6 @@ namespace Suitsupply.Tailoring.Data
         public DateTime CreationDate { get; set; }
         
         public DateTime? PayDate { get; set; }
+        public DateTime? CompleteDate { get; set; }
     }
 }

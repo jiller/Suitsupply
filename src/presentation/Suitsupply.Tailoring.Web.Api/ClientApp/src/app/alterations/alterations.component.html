@@ -27,7 +27,7 @@
       <td>{{ alteration.creationDate | date:'dd.MM.yyyy HH:mm' }}</td>
       <td>{{ alteration.state }}</td>
       <td>
-        <button [routerLink]="['/alterations/view', alteration.id]">View</button>
+        <button class="no-margin" [routerLink]="['/alterations/view', alteration.id]">View</button>
       </td>
     </tr>
   </tbody>

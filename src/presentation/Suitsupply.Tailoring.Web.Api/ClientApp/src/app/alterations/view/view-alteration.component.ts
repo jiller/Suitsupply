@@ -29,7 +29,7 @@ export class ViewAlterationsComponent {
   }
 
   markAlterationAsPaid() {
-    this.http.post(this.baseUrl + '/alterations/' + this.id + '/paid', {})
+    this.http.post(this.baseUrl + '/alterations/' + this.id + '/pay', {})
       .subscribe(result => {
         return this.router.navigateByUrl('alterations');
       }, error => {

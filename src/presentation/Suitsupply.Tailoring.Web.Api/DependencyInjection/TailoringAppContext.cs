@@ -39,7 +39,8 @@ namespace Suitsupply.Tailoring.Web.Api.DependencyInjection
             RegisterDatabase();
             RegisterCqs();
             RegisterAutoMapper();
-
+            
+            Container.RegisterSingleton<INotificationService, NotificationService>();
             Container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
             Container.RegisterSingleton<IQueuedMessageHandler>(() =>
             {

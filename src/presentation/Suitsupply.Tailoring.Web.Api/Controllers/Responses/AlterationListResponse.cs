@@ -20,6 +20,7 @@ namespace Suitsupply.Tailoring.Web.Api.Controllers.Responses
         public int CustomerId { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? PayDate { get; set; }
+        public DateTime? CompleteDate { get; set; }
         public Shortening ShortenSleeves { get; set; }
         public Shortening ShortenTrousers { get; set; }
         public AlterationState State { get; set; }
