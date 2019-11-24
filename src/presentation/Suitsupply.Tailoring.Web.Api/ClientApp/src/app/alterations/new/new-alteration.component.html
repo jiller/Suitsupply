@@ -1,0 +1,31 @@
+﻿<h1 id="formLabel">Create a new alteration</h1>
+
+<form class="form-group" aria-labelledby="formLabel" [formGroup]="alterationForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <label for="customerID" class="col-form-label">Customer ID</label>
+        <input id="customerID" class="form-control" formControlName="customerId" placeholder="Please enter customer identifier" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <span>Shorten Sleeves</span>
+      <div class="form-group" formGroupName="shortenSleeves">
+        <input class="form-control" formControlName="left" type="number" [max]="5" [min]="-5"/>
+        <input class="form-control" formControlName="right" type="number" [max]="5" [min]="-5"/>
+      </div>
+    </div>
+    <div class="col-6">
+      <span>Shorten Trousers</span>
+      <div class="form-group" formGroupName="shortenTrousers">
+        <input class="form-control" formControlName="left" type="number" [max]="5" [min]="-5"/>
+        <input class="form-control" formControlName="right" type="number" [max]="5" [min]="-5"/>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <button type="submit" [disabled]="!alterationForm.valid">Submit</button>
+  </div>
+</form>

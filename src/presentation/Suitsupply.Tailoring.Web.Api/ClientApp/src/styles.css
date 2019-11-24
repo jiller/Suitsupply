@@ -14,3 +14,30 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+button {
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+}
+button:hover {
+  background-color: #cfd8dc;
+}
+button:disabled {
+  background-color: #eee;
+  color: #aaa;
+  cursor: auto;
+}
+
+button.green {
+  background-color: green;
+  color: white;
+}
+
+button.green:hover {
+  background-color: green;
+}

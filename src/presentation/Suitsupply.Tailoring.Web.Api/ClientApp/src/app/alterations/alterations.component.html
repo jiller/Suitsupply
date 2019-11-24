@@ -1,6 +1,11 @@
 <h1 id="tableLabel">Sleeves \ Trousers alterations</h1>
 
-<p>List of all customers alteratons</p>
+<div>
+  <div style="float: left;">List of all customers alteratons</div>
+  <div style="float: right" [routerLinkActive]="['link-active']">
+    <button class="green nav-item nav-link-edit" [routerLink]="['/alterations/new']">Create new alteration</button>
+  </div>
+</div>
 
 <p *ngIf="!alterations"><em>Loading...</em></p>
 

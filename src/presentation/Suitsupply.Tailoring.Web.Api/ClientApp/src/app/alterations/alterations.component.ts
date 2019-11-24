@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Shortening} from "../common/shortening";
+import { Alteration } from "../common/alteration";
 
 @Component({
   selector: 'app-alterations',
@@ -14,12 +14,4 @@ export class AlterationsComponent {
       this.alterations = result;
     }, error => console.error(error));
   }
-}
-
-interface Alteration {
-  customerId: number;
-  shortenSleeves: Shortening;
-  shortenTrousers: Shortening;
-  creationDate: Date;
-  orderState: string;
 }
