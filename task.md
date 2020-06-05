@@ -1,5 +1,4 @@
-# Test assignment Senior/Architect
-
+# Test assignment
 Create a solution for the following use case:
 A customer brings a suit that needs altering (shorten sleeves, shorten trousers). A salesrep needs a way to enter these alterations. Once the payment for the alteration has been received, a tailor will pick up the suit and do the alterations. When he is finished, the customer will be notified that the suit is ready to be picked up.
 
